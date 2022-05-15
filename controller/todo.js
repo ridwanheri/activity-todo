@@ -97,7 +97,6 @@ const updateTodo = async (req, res) => {
         const result = await Todo.update(req.body, {
             where: { id: req.params.id },
         });
-        console.log('result todo update ', result);
         if (result[0] !== 1) {
             res.status(404).json({
                 success: 'Failed',

@@ -31,7 +31,6 @@ const updateActivity = async (req, res) => {
         const result = await Activity.update(req.body, {
             where: { id: req.params.id },
         });
-        console.log('result', result);
         if (result[0] !== 1) {
             res.status(404).json({
                 success: 'Failed',

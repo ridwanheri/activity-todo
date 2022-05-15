@@ -7,12 +7,12 @@ const dbConfig = {
     PASSWORD: process.env.MYSQL_PASSWORD,
     DATABASE: process.env.MYSQL_DBNAME,
     dialect: 'mysql',
-    pool: {
-        max: 5,
-        min: 0,
-        acquire: 30000,
-        idle: 10000,
-    },
+    // pool: {
+    //     max: 20,
+    //     min: 0,
+    //     acquire: 30000,
+    //     idle: 10000,
+    // },
 };
 
 module.exports = dbConfig;
