@@ -4,11 +4,17 @@ const Activity = db.activity;
 
 const createActivity = async (req, res) => {
     try {
-        const result = await Activity.create({
-            title: req.body.title,
-        });
+        if (req.body.title === undefined || req.body.title === '') {
+            res.status(400).json({
+                status: 'Bad Request',
+                message: 'title cannot be null',
+            });
+            return;
+        }
+        const result = await Activity.create({ title: req.body.title, email: req.body.email });
         res.status(201).json({
             success: 'Success',
+            status: 'Success',
             data: result,
         });
     } catch (error) {
@@ -25,14 +31,19 @@ const updateActivity = async (req, res) => {
         const result = await Activity.update(req.body, {
             where: { id: req.params.id },
         });
+        console.log('result', result);
         if (result[0] !== 1) {
             res.status(404).json({
                 success: 'Failed',
-                message: 'Activity does not existed',
+                status: 'Not Found',
+                message: `Activity with ID ${req.params.id} Not Found`,
             });
         } else {
+            const updated = await Activity.findByPk(req.params.id);
             res.status(200).json({
                 success: 'Success',
+                status: 'Success',
+                data: updated,
                 message: 'Success update activity',
             });
         }
@@ -51,11 +62,14 @@ const deleteActivityById = async (req, res) => {
         if (result === 0) {
             res.status(404).json({
                 success: 'Failed',
-                message: 'Activity does not exist',
+                status: 'Not Found',
+                message: `Activity with ID ${req.params.id} Not Found`,
             });
         } else {
             res.status(200).json({
                 success: 'Success',
+                status: 'Success',
+                data: {},
             });
         }
     } catch (error) {
@@ -70,8 +84,18 @@ const deleteActivityById = async (req, res) => {
 const getActivityByid = async (req, res) => {
     try {
         const result = await Activity.findByPk(req.params.id, { include: ['todo_items'] });
+
+        if (result === null) {
+            res.status(404).json({
+                success: 'Failed',
+                status: 'Not Found',
+                message: `Activity with ID ${req.params.id} Not Found`,
+            });
+            return;
+        }
         res.status(200).json({
             success: 'Success',
+            status: 'Success',
             data: result,
         });
     } catch (error) {
@@ -88,6 +112,7 @@ const getActivity = async (req, res) => {
         const result = await Activity.findAndCountAll({ limit: 1000 });
         res.status(200).json({
             success: 'Success',
+            status: 'Success',
             total: result.count,
             data: result.rows,
         });

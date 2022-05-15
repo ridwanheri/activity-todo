@@ -3,6 +3,9 @@ module.exports = (sequelize, DataTypes) => {
         title: {
             type: DataTypes.STRING,
         },
+        email: {
+            type: DataTypes.STRING,
+        },
     });
     return Activity;
 };
